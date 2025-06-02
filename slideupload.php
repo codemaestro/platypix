@@ -37,10 +37,10 @@
     }
     return $image;
   }
-  
+
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['image']) && isset($_POST['caption'])) {
-      $caption = preg_replace('/[^a-zA-Z0-9\-!]/', '_', $_POST['caption']);
+      $caption = preg_replace('/[^a-zA-Z0-9_\-!]/', '_', $_POST['caption']);
       $uploadDir = 'uploads/';
       $imagesDir = 'images/';
       $processedDir = 'uploads/processed/';
@@ -66,9 +66,21 @@
           // Convert to JPG using GD or Imagick
           try {
             if ($fileType === 'heic') {
-              throw new Exception('HEIC processing not available.');
+              if (extension_loaded('imagick')) {
+                $imagick = new Imagick($targetFile);
+                $imagick->setImageFormat('jpeg');
+                $imagick->writeImage($newFilePath);
+                $imagick->clear();
+                $imagick->destroy();
+                rename($targetFile, $processedDir . basename($file['name']));
+              } else {
+                throw new Exception('Imagick extension not available for HEIC processing.');
+              }
             } else {
               $image = imagecreatefromstring(file_get_contents($targetFile));
+              if (in_array($fileType, ['jpg', 'jpeg'])) {
+                $image = correctImageOrientation($targetFile, $image);
+              }
               imagejpeg($image, $newFilePath);
               imagedestroy($image);
               // Move original file to processed folder
