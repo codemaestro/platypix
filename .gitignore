@@ -1,0 +1,3 @@
+# Ignore photo indexes
+.DS_Store
+Thumbs.db
