@@ -17,6 +17,7 @@
   // move the processed images to the uploads/processed folder
   // move any error images to the uploads/error folder
 
+  // Function to correct image orientation based on EXIF data
   function correctImageOrientation($filename, $image)
   {
     if (function_exists('exif_read_data')) {
@@ -40,11 +41,23 @@
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['image']) && isset($_POST['caption'])) {
-      $caption = preg_replace('/[^a-zA-Z0-9_\-!]/', '_', $_POST['caption']);
-      $uploadDir = 'uploads/';
-      $imagesDir = 'images/';
-      $processedDir = 'uploads/processed/';
-      $errorDir = 'uploads/error/';
+      // Check if caption is provided and not empty
+      // (shouldn't happen due to HTML5 required attribute, but good to check)
+      if (empty($_POST['caption'])) {
+        echo "Caption cannot be empty.";
+        exit;
+      }
+
+      // sanitize caption to prevent directory traversal and other issues
+      // caption allows alphanumeric characters and some punctuation
+      // caption will be used as the filename
+      $caption = trim(preg_replace('/[^a-zA-Z0-9_,&\'"‘’“”#%!?\(\)\[\]-]+/', '_', $_POST['caption']));
+
+      // Define upload, images, processed, and error directories
+      $imagesDir = './images/';
+      $uploadDir = './uploads/';
+      $processedDir = './uploads/processed/';
+      $errorDir = './uploads/error/';
 
       // Ensure directories exist
       if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
@@ -72,7 +85,6 @@
                 $imagick->writeImage($newFilePath);
                 $imagick->clear();
                 $imagick->destroy();
-                rename($targetFile, $processedDir . basename($file['name']));
               } else {
                 throw new Exception('Imagick extension not available for HEIC processing.');
               }
@@ -83,9 +95,9 @@
               }
               imagejpeg($image, $newFilePath);
               imagedestroy($image);
-              // Move original file to processed folder
-              rename($targetFile, $processedDir . basename($file['name']));
             }
+            // Move original file to processed folder
+            rename($targetFile, $processedDir . basename($file['name']));
             echo "Image uploaded and processed successfully: " . htmlspecialchars($newFileName);
           } catch (Exception $e) {
             // Move to error directory on failure

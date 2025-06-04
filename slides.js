@@ -4,7 +4,7 @@ let timer = null;
 
 function fixCaption(caption) {
   if (caption) {
-    caption = caption.replace(/_/g, " ").trim();
+    caption = caption.replace(/_+/g, " ").trim();
   }
   return caption;
 }
