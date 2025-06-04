@@ -17,6 +17,27 @@
   // move the processed images to the uploads/processed folder
   // move any error images to the uploads/error folder
 
+  function correctImageOrientation($filename, $image)
+  {
+    if (function_exists('exif_read_data')) {
+      $exif = @exif_read_data($filename);
+      if (!empty($exif['Orientation'])) {
+        switch ($exif['Orientation']) {
+          case 3:
+            $image = imagerotate($image, 180, 0);
+            break;
+          case 6:
+            $image = imagerotate($image, -90, 0);
+            break;
+          case 8:
+            $image = imagerotate($image, 90, 0);
+            break;
+        }
+      }
+    }
+    return $image;
+  }
+  
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['image']) && isset($_POST['caption'])) {
       $caption = preg_replace('/[^a-zA-Z0-9\-!]/', '_', $_POST['caption']);
