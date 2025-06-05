@@ -10,19 +10,23 @@ Watch the progress of this app develop over time on the [codemaestro Substack](h
 platypix/
 ├── assets/
 │   └── qrcode-template.afdesign
-├── images/
-│   └── Update_QR_code_with_your_upload_link.png
+├── dist/
+│   ├── images/
+│   │   └── Update_QR_code_with_your_upload_link.png
+│   ├── uploads/          Generated folders
+│   │   ├── error/
+│   │   └── processed/
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── slides.css
+│   ├── slides.js
+│   ├── slides.php
+│   └── slideupload.php
 ├── readme/
 │   └── platypix.png
 ├── .gitignore
-├── favicon.ico
-├── index.html
 ├── LICENSE
-├── README.md
-├── slides.css
-├── slides.js
-├── slides.php
-└── slideupload.php
+└── README.md
 ```
 
 ## More information
