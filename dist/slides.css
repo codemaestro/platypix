@@ -1,11 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+:root {
+  --primary-color: #363636;
+  --secondary-color: #f0f0f0;
+  --accent-color: #ff5722;
+  --text-color: white;
+  --background-color: black;
+  --caption-color: #9a9a9a;
+  --link-color: #9a9a9a;
+  --link-hover-color: #ff8a50;
+  --border-color: #363636;
+  --image-shadow: unset 0 4px 24px rgba(0, 0, 0, 0.8);
+}
 
+/* slide show view */
 body {
   margin: 0;
   padding: 0;
-  font-family: Monserrat, sans-serif;
-  color: white;
-  background-color: black;
+  font-family: Montserrat, sans-serif;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+h1 {
+  text-align: center;
+  font-weight: 500;
 }
 
 .fade {
@@ -21,23 +39,136 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 1rem;
   height: 100vh;
-  width: auto;
-  max-width: 100vw;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+#slide div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  object-fit: contain;
+  padding: 0;
+  height: 85vh;
 }
 
 #slide img {
-  min-height: 80vh;
-  max-height: 92vh;
-  max-width: 90vw;
-  border: 2px solid #363636;
+  max-height: 92%;
+  max-width: 90%;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: unset 0 4px 24px rgba(0, 0, 0, 0.80);
+  box-shadow: var(--image-shadow);
+}
+
+/* Portrait mode */
+@media (orientation: portrait) {
+  #slide img {
+    min-width: 70%;
+  }
+}
+
+/* Landscape mode */
+@media (orientation: landscape) {
+  #slide img {
+    min-height: 70%;
+  }
 }
 
 #slide p {
   margin-top: 0.5rem;
   font-weight: 400;
+  text-align: center;
+  color: var(--caption-color);
+  font-size: 0.9rem;
+}
+
+#slide p a:link,
+#slide p a:visited {
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+#slide p a:hover,
+#slide p a:active {
+  color: var(--link-hover-color);
+}
+
+/* gallery / contact sheet view */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+  align-items: start;
+  padding: 0 2rem;
+}
+
+.gallery div img {
+  width: 100%;
+  max-height: 280px;
+  height: auto;
+  object-fit: contain;
+  border: 2px solid #363636;
+  border-radius: 8px;
+}
+
+.gallery div p {
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.gallery div a:link,
+.gallery div a:visited {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 400;
+}
+
+.gallery div a:hover,
+.gallery div a:active {
+  color: var(--link-hover-color);
+}
+
+/* button to open / close contact sheet */
+.gallery-button {
+  display: block;
+  margin: 0 auto;
+  opacity: 0.35;
+  font-family: Montserrat, sans-serif;
+}
+
+.gallery-button:hover {
+  opacity: 1;
+}
+
+.gallery + .gallery-button {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+/* footer */
+footer {
+  /* hide footer below page */
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin: 12rem 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--link-color);
+  background-color: var(--background-color);
+}
+
+footer a:link,
+footer a:visited {
+  text-decoration: none;
+  color: var(--link-color);
+}
+footer a:hover,
+footer a:active {
+  color: var(--link-hover-color);
 }

@@ -1,3 +1,6 @@
+<?php
+include_once('../lib/auth.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,18 +8,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.5">
   <title>Upload images</title>
+  <link rel="stylesheet" href="slides.css<?php echo '?v=' . filemtime('slides.css'); ?>">
 </head>
 
 <body>
-<?php
-  // create a web form that receives a file upload with a text field for the caption
-  // test that the image is jpg, jpeg, png, gif, or heic
-  // save the image to an uploads folder
-  // process the image/uploads to save a jpg copy to the images folder
-  // name the file using the sanitized text field .jpg
-  // move the processed images to the uploads/processed folder
-  // move any error images to the uploads/error folder
-
+  <?php
   // Function to correct image orientation based on EXIF data
   function correctImageOrientation($filename, $image)
   {
@@ -115,16 +111,27 @@
       echo "No file or caption provided.";
     }
 
-    echo '<a href="./slideupload.php">Upload another photo</a>';
+    log_msg("{$targetFile} uploaded " . date('m/d/Y h:i:s a', time()));
+    echo '<p><a href="/slideupload.php">Upload another photo</a></p>';
+    echo '<p><a href="/">Return to album</a></p>';
   } else {
     // Display the upload form
-    echo '<form action="" method="post" enctype="multipart/form-data">';
-    echo 'Caption: <input type="text" name="caption" required><br>';
-    echo 'Select image to upload: <input type="file" name="image" accept=".jpg,.jpeg,.png,.gif,.heic" required><br>';
-    echo '<input type="submit" value="Upload Image">';
-    echo '</form>';
-  }
-?>
+  ?>
+    <h1>Upload Image</h1>
+    <p>Upload your images here. Supported formats: JPG, JPEG, PNG, GIF, HEIC.</p>
+    <form action="" method="post" enctype="multipart/form-data">
+      <p>Select image to upload:<br>
+        <input type="file" name="image" accept=".jpg,.jpeg,.png,.gif,.heic" required>
+      </p>
+      <p>Image caption (used as filename):<br>
+        <input type="text" name="caption" required>
+      </p>
+      <p><input type="submit" value="Upload Image"></p>
+      <p><a href="/">Return to album</a></p>';
+    </form>
+  <?php  }
+  ?>
+  <?php include_once '../lib/footer.php'; ?>
 </body>
 
 </html>

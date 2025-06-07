@@ -1,3 +1,8 @@
 # Ignore photo indexes
 .DS_Store
 Thumbs.db
+
+# Environment variables
+.env
+error_log
+logs/
