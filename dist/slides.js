@@ -44,9 +44,9 @@ function showImage() {
   const caption = document.createElement("p");
   const glink = `To see these images again, visit the gallery at <a href="${siteurl}">${siteurl}</a>`;
   caption.innerHTML =
-    // don't display filename as caption at all
-    // images[current].caption ?
-    //   `${fixCaption(images[current].caption)}<br>${glink}` :
+    // hide the next two lines to not display filename as caption
+    images[current].caption ?
+      `${fixCaption(images[current].caption)}<br>${glink}` :
     `${glink}`;
   img.classList.remove("show");
   caption.classList.remove("show");
@@ -88,7 +88,7 @@ function contactSheet() {
   const title = document.createElement("h1");
   title.innerText =
     images.length > 0
-      ? `Gallery of ${images.length - 1} images`
+      ? `Gallery of ${images.length} images`
       : `No Images Available`;
 
   // build the gallery
