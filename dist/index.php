@@ -7,7 +7,7 @@ include_once('../lib/auth.php');
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Steve's 80th birthday web slideshow app</title>
+  <title>Platypix web slideshow app</title>
 
   <link rel="stylesheet" href="slides.css<?php echo '?v=' . filemtime('slides.css'); ?>" />
   <script src="slides.js<?php echo '?v=' . filemtime('slides.css'); ?>" async defer></script>
