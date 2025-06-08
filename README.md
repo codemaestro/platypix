@@ -1,4 +1,4 @@
-# Steve's 80th Birthday Photo Album
+# Platypix Dynamic Web Photo Album
 
 Web-based slideshow app that can dynamically update photos in real time as users upload new photos to the server.
 
@@ -10,11 +10,19 @@ Configure GitHub webhooks to call the `deployprod.php` script when you push a ch
 
 * An empty `deployprod.log` file.
 
-* Populate an `.env` file with the following values:
+* Populate an `.env` file with the following values (copy from `.env-TEMPLATE`):
 
   * LOGFILE: location of the `deployprod.log` file.
 
-  * SECRET: a SHA1 hash of the passphrase written in the GitHub action.
+  * ACCESSLOG: location of the `accesslog.log` file.
+
+  * SECRET: The passphrase included in the GitHub action.
+
+  * ACCESSPASS: Password for sign on auth
+
+  * COOKIESET: An arbitrary key name for the login cookie
+
+  * COOKIEVAL: An arbitrary comparison value
 
 ## File structure
 
@@ -24,18 +32,30 @@ platypix/
 │   └── qrcode-template.afdesign
 ├── dist/
 │   ├── images/
+│   │   ├── .htaccess               For viewing file list - delete if not needed
 │   │   └── (all the photos)
 │   ├── uploads/
-│   │   ├── error/
-│   │   └── processed/
+│   │   ├── error/                  Files that failed processing (either process)
+│   │   ├── original/               Files for processing by slideprocess.php - local server only
+│   │   ├── processed/              Original files processed by slideupload.php to /images
+│   │   └── saved/                  Original files processed by slideprocess.php to /images
+│   ├── deployprod.php              Call this script from the GitHub webhook (rename this in production)
 │   ├── favicon.ico
-│   ├── index.html
+│   ├── index.php
+│   ├── login.php
+│   ├── slideprocess.php            Run from local server (rename in production)
 │   ├── slides.css
 │   ├── slides.js
 │   ├── slides.php
 │   └── slideupload.php
+├── lib/
+│   ├── auth.php                    Authentication library for inclusion
+│   └── footer.php                  Shared footer for inclusion in all files
+├── logs/                           Default location to write log files
+│   └── .donotdelete
 ├── readme/
 │   └── platypix.png
+├── .env-TEMPLATE
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -47,4 +67,4 @@ Visit the [platypix](https://github.com/codemaestro/platypix) project on GitHub.
 
 ![QR code](./readme/platypix.png)
 
-Last update: 2025-06-06 04:51
+Last update: 2025-06-07 23:30
