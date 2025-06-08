@@ -12,7 +12,7 @@ include_once('../lib/auth.php');
 </head>
 
 <body>
-  <?php
+<?php
   // Function to correct image orientation based on EXIF data
   function correctImageOrientation($filename, $image)
   {
@@ -47,7 +47,7 @@ include_once('../lib/auth.php');
       // sanitize caption to prevent directory traversal and other issues
       // caption allows alphanumeric characters and some punctuation
       // caption will be used as the filename
-      $caption = trim(preg_replace('/[^a-zA-Z0-9_,&\'"‘’“”#%!?\(\)\[\]-]+/', '_', $_POST['caption']));
+      $caption = trim(preg_replace('/[^a-zA-Z0-9,&\'"‘’“”#%!?\(\)\[\]-]+/', '_', $_POST['caption']));
 
       // Define upload, images, processed, and error directories
       $imagesDir = './images/';
@@ -89,7 +89,7 @@ include_once('../lib/auth.php');
               if (in_array($fileType, ['jpg', 'jpeg'])) {
                 $image = correctImageOrientation($targetFile, $image);
               }
-              imagejpeg($image, $newFilePath);
+              imagejpeg($image, $newFilePath, 90); // Save as JPG with quality 90
               imagedestroy($image);
             }
             // Move original file to processed folder
@@ -127,7 +127,7 @@ include_once('../lib/auth.php');
         <input type="text" name="caption" required>
       </p>
       <p><input type="submit" value="Upload Image"></p>
-      <p><a href="/">Return to album</a></p>';
+      <p><a href="/">Return to album</a></p>
     </form>
   <?php  }
   ?>

@@ -26,10 +26,27 @@ h1 {
   font-weight: 500;
 }
 
+button {
+  display: block;
+  margin: 0 auto;
+  opacity: 0.35;
+  font-family: Montserrat, sans-serif;
+}
+
+button:hover,
+button:active {
+  opacity: 1;
+}
+
+button:focus {
+  outline: none;
+}
+
 .fade {
   opacity: 0;
   transition: opacity 1s;
 }
+
 .show {
   opacity: 1;
 }
@@ -134,20 +151,56 @@ h1 {
 }
 
 /* button to open / close contact sheet */
-.gallery-button {
-  display: block;
-  margin: 0 auto;
-  opacity: 0.35;
-  font-family: Montserrat, sans-serif;
-}
-
-.gallery-button:hover {
-  opacity: 1;
-}
-
 .gallery + .gallery-button {
   margin-top: 3rem;
   margin-bottom: 3rem;
+}
+
+/* login form */
+.login-container {
+  margin: 2rem;
+}
+
+.error {
+    color: var(--accent-color);
+}
+
+.login-container label {
+    display: inline-block;
+    width: 6rem;
+}
+
+/* login button */
+.login-container button {
+    margin-left: 0;
+}
+
+/* toggle password visibility */
+#toggle-password {
+    display: inline-block;
+    margin-left: 8rem;
+    font-size: 0.8rem; 
+}
+
+#toggle-password:link,
+#toggle-password:visited {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+#toggle-password:hover,
+#toggle-password:active {
+  color: var(--text-color);
+}
+
+#toggle-password.active:link,
+#toggle-password.active:visited {
+  color: var(--link-hover-color)
+}
+
+#toggle-password.active:hover,
+#toggle-password.active:active {
+  color: var(--accent-color)
 }
 
 /* footer */

@@ -3,6 +3,9 @@ let current = 0;
 let imagecount = 0;
 let timer = null;
 let fetchtimer = null;
+const siteurl = location.href.indexOf('127.') > -1 ?
+  "https://replace-localhost-with-final-url" :
+  location.href;
 
 function fixCaption(caption) {
   if (caption) {
@@ -39,11 +42,12 @@ function fetchImages() {
 function showImage() {
   const img = document.getElementById("slideshow-img");
   const caption = document.createElement("p");
-  const glink = `To see these images again, visit the gallery at <a href="${location.href}">${location.href}</a>`; 
+  const glink = `To see these images again, visit the gallery at <a href="${siteurl}">${siteurl}</a>`;
   caption.innerHTML =
-    images[current].caption ?
-      `${fixCaption(images[current].caption)}<br>${glink}` :
-      `${glink}`;
+    // don't display filename as caption at all
+    // images[current].caption ?
+    //   `${fixCaption(images[current].caption)}<br>${glink}` :
+    `${glink}`;
   img.classList.remove("show");
   caption.classList.remove("show");
   setTimeout(() => {
@@ -86,9 +90,16 @@ function contactSheet() {
     images.length > 0
       ? `Gallery of ${images.length - 1} images`
       : `No Images Available`;
-  
+
   // build the gallery
   const gallery = document.createElement("div");
+
+  // sort gallery images by filename
+  images.sort((a, b) => {
+    const aName = a.src.split("/").pop().toLowerCase();
+    const bName = b.src.split("/").pop().toLowerCase();
+    return aName.localeCompare(bName);
+  });
 
   if (images.length > 0) {
     images.forEach((image) => {
@@ -137,7 +148,7 @@ function galleryButton(fn = "open", el = "") {
   }
   if (el !== "") {
     // if an element is specified, insert the button before it
-    el = document.querySelector(el)
+    el = document.querySelector(el);
     document.body.insertBefore(button, el || document.body.firstChild);
   } else {
     // append the button to the #container
