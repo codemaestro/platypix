@@ -39,6 +39,8 @@ if (isset($_SERVER["DOCUMENT_ROOT"]) && ! empty($_SERVER["DOCUMENT_ROOT"])) {
   $files = array_diff(scandir($sourceDir), array('.', '..'));
 
   foreach ($files as $file) {
+    echo "Processing file: $file\n";
+    flush();
     $filePath = $sourceDir . $file;
     if (is_file($filePath)) {
       $fileType = strtolower(pathinfo($file, PATHINFO_EXTENSION));

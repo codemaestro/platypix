@@ -7,7 +7,7 @@ include_once('../lib/auth.php');
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.5">
-  <title>Upload images</title>
+  <title>Platypix image uploader</title>
   <link rel="stylesheet" href="slides.css<?php echo '?v=' . filemtime('slides.css'); ?>">
 </head>
 
