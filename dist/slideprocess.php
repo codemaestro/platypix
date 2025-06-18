@@ -30,19 +30,28 @@ if (isset($_SERVER["DOCUMENT_ROOT"]) && ! empty($_SERVER["DOCUMENT_ROOT"])) {
   }
 
   // Define upload, images, processed, and error directories
-  $imagesDir = './images/';
   $sourceDir = './uploads/original/';
-  $processedDir = './uploads/saved/';
+  $processedDir = './uploads/res-original/';
+  $galleryDir = './uploads/res-gallery/';
+  $imagesDir = './images/';
+  $compSlide = 80; // Compression quality for slide images
+  $compGallery = 30; // Compression quality for gallery images
   $errorDir = './uploads/error/';
+
+  // Ensure directories exist
+  if (!is_dir($processedDir)) mkdir($processedDir, 0755, true);
+  if (!is_dir($galleryDir)) mkdir($galleryDir, 0755, true);
+  if (!is_dir($errorDir)) mkdir($errorDir, 0755, true);
 
   // read list of files in source directory
   $files = array_diff(scandir($sourceDir), array('.', '..'));
 
   foreach ($files as $file) {
-    echo "Processing file: $file\n";
-    flush();
+    if (substr($file, 0, 1) === '.') {
+      continue; // Skip hidden files
+    }
     $filePath = $sourceDir . $file;
-    if (is_file($filePath)) {
+    if (is_file($filePath)) { // Skip hidden files
       $fileType = strtolower(pathinfo($file, PATHINFO_EXTENSION));
       $caption = pathinfo($file, PATHINFO_FILENAME);
 
@@ -72,7 +81,7 @@ if (isset($_SERVER["DOCUMENT_ROOT"]) && ! empty($_SERVER["DOCUMENT_ROOT"])) {
               $imagick->clear();
               $imagick->destroy();
             } else {
-              throw new Exception('Imagick extension not available for HEIC processing.');
+              throw new Exception('HEIC file could not be processed.');
             }
             break;
           default:
@@ -83,14 +92,18 @@ if (isset($_SERVER["DOCUMENT_ROOT"]) && ! empty($_SERVER["DOCUMENT_ROOT"])) {
         // Correct orientation if necessary
         $image = correctImageOrientation($filePath, $image);
 
-        // Save the processed image as JPG
+        // Save the slideshow version in the images directory
         $processedFilePath = $imagesDir . $caption . '.jpg';
-        imagejpeg($image, $processedFilePath, 80); // 90% quality
+        imagejpeg($image, $processedFilePath, $compSlide);
+
+        // Save a lower resolution version for gallery
+        $galleryFilePath = $galleryDir . $caption . '.jpg';
+        imagejpeg($image, $galleryFilePath, $compGallery);
 
         // Free up memory
         imagedestroy($image);
 
-        // Move original file to processed files directory
+        // Move original file to full res files directory
         rename($filePath, $processedDir . basename($file));
       } else {
         // Move unsupported file to error directory

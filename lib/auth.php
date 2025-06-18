@@ -13,8 +13,11 @@ function log_msg($message)
 }
 
 // check if the user is logged in
+// allow no password setting
 session_start();
-if (isset($_SERVER["DOCUMENT_ROOT"]) && empty($_SERVER["DOCUMENT_ROOT"])) {
+if (
+  trim(ACCESSPASS) === '' ||
+  isset($_SERVER["DOCUMENT_ROOT"]) && empty($_SERVER["DOCUMENT_ROOT"])) {
   $_COOKIE[COOKIESET] = COOKIEVAL; // Simulate a local environment for testing
   $_SESSION['logged_in'] = true;
 }
@@ -23,12 +26,30 @@ if (
   !isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true ||
   !isset($_COOKIE[COOKIESET]) || $_COOKIE[COOKIESET] !== COOKIEVAL
 ) {
+  // Determine the current URL (except for /login.php)
+  $currentUrl = $_SERVER['REQUEST_URI'];
+  if ($currentUrl === '/login.php') {
+    $redirectUrl = '/';
+  } else {
+    $redirectUrl = $currentUrl;
+  }
+
   // If form submitted, check password
   if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['password']) && $_POST['password'] === ACCESSPASS) {
       setcookie(COOKIESET, COOKIEVAL, time() + 60 * 60 * 24 * 7, '/');
       $_SESSION['logged_in'] = true;
-      header('Location: /');
+      // Redirect to the original page if REDIR param exists, else home
+      $redir = '/';
+      if (isset($_GET['REDIR'])) {
+        $candidate = $_GET['REDIR'];
+        // Fix server-side unvalidated URL redirection error by
+        // only allowing relative paths starting with /
+        if (strpos($candidate, '/') === 0 && strpos($candidate, '//') === false) {
+          $redir = $candidate;
+        }
+      }
+      header("Location: $redir");
       exit;
     } else {
       $error = "Invalid password.";
@@ -37,7 +58,7 @@ if (
     session_destroy();
     if ($_SERVER['PHP_SELF'] !== '/login.php') {
       // Redirect to login page if not already there
-      header('Location: /login.php');
+      header('Location: /login.php?REDIR=' . urlencode($redirectUrl));
       exit;
     }
   }

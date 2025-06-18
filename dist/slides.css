@@ -60,6 +60,7 @@ button:focus {
   width: 100vw;
   margin: 0;
   padding: 0;
+  cursor: none;
 }
 
 #slide div {
@@ -71,6 +72,23 @@ button:focus {
   object-fit: contain;
   padding: 0;
   height: 85vh;
+  width: 100vw;
+}
+
+#slide::after {
+  display: block;
+  position: absolute;
+  width: 8rem;
+  height: 9.5rem;
+  content: "Upoad your photos";
+  margin: 0;
+  padding: 0;
+  background: transparent url("./images/Upload_Your_Photos.png") bottom left no-repeat;
+  background-size: 100%;  
+  text-align: center;
+  bottom: 4rem;
+  right: 4rem;
+  font-size: 0.6rem;
 }
 
 #slide img {
@@ -81,10 +99,17 @@ button:focus {
   box-shadow: var(--image-shadow);
 }
 
+#slide.initial::after {
+  display: none;
+}
+
 /* Portrait mode */
 @media (orientation: portrait) {
   #slide img {
     min-width: 70%;
+  }
+  #slide::after {
+    display: none;
   }
 }
 
@@ -92,6 +117,11 @@ button:focus {
 @media (orientation: landscape) {
   #slide img {
     min-height: 70%;
+  }
+  @media screen and (max-width: 1200px) {
+    #slide::after {
+      display: none;
+    }
   }
 }
 
@@ -162,24 +192,24 @@ button:focus {
 }
 
 .error {
-    color: var(--accent-color);
+  color: var(--accent-color);
 }
 
 .login-container label {
-    display: inline-block;
-    width: 6rem;
+  display: inline-block;
+  width: 6rem;
 }
 
 /* login button */
 .login-container button {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 /* toggle password visibility */
 #toggle-password {
-    display: inline-block;
-    margin-left: 8rem;
-    font-size: 0.8rem; 
+  display: inline-block;
+  margin-left: 8rem;
+  font-size: 0.8rem;
 }
 
 #toggle-password:link,
@@ -195,12 +225,12 @@ button:focus {
 
 #toggle-password.active:link,
 #toggle-password.active:visited {
-  color: var(--link-hover-color)
+  color: var(--link-hover-color);
 }
 
 #toggle-password.active:hover,
 #toggle-password.active:active {
-  color: var(--accent-color)
+  color: var(--accent-color);
 }
 
 /* footer */

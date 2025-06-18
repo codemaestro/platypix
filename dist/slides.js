@@ -3,9 +3,14 @@ let current = 0;
 let imagecount = 0;
 let timer = null;
 let fetchtimer = null;
-const siteurl = location.href.indexOf('127.') > -1 ?
-  "https://replace-localhost-with-final-url" :
-  location.href;
+const siteurl =
+  location.href.indexOf("127.") > -1
+    ? "replace-localhost-with-final-url"
+    : location.href;
+
+const dir_slides = "images/";
+const dir_original = "uploads/res-original/";
+const dir_gallery = "uploads/res-gallery/";
 
 function fixCaption(caption) {
   if (caption) {
@@ -19,6 +24,11 @@ function fetchImages() {
     .then((res) => res.json())
     .then((list) => {
       if (Array.isArray(list) && list.length > 0) {
+        if (list.length > 1) {
+          document.getElementById("slide").classList.remove("initial");
+        } else if (list.length <= 1) {
+          document.getElementById("slide").classList.add("initial");
+        }
         if (imagecount !== list.length) {
           // Won't run this function if the number of fetched
           // images matches the current image count
@@ -26,6 +36,7 @@ function fetchImages() {
           images = list.map((image) => ({
             src: image.src,
             caption: image.caption,
+            full: image.full,
           }));
           randomizeList(); // randomize the list of images
           imagecount = list.length; // update image count
@@ -44,10 +55,11 @@ function showImage() {
   const caption = document.createElement("p");
   const glink = `To see these images again, visit the gallery at <a href="${siteurl}">${siteurl}</a>`;
   caption.innerHTML =
-    // hide the next two lines to not display filename as caption
-    images[current].caption ?
-      `${fixCaption(images[current].caption)}<br>${glink}` :
-    `${glink}`;
+    // comment these lines to not display captions
+    images[current].caption
+      ? `${fixCaption(images[current].caption)}<br>${glink}`
+      : // end comments
+        `${glink}`;
   img.classList.remove("show");
   caption.classList.remove("show");
   setTimeout(() => {
@@ -103,15 +115,21 @@ function contactSheet() {
 
   if (images.length > 0) {
     images.forEach((image) => {
+      console.log("image:", image);
+      const srcalt = {
+        gallery: image.src.replace(dir_slides, dir_gallery),
+        download: image.full,
+      };
+
       // create image element
       const img = document.createElement("img");
-      img.src = image.src;
+      img.src = srcalt.gallery;
       img.alt = image.caption || "Image from the gallery";
 
       // create caption element
       const caption = document.createElement("p");
       const captionLink = document.createElement("a");
-      captionLink.href = img.src;
+      captionLink.href = srcalt.download;
       captionLink.innerText = img.alt;
       captionLink.target = "_blank"; // open in new tab
       caption.appendChild(captionLink);
@@ -132,6 +150,7 @@ function contactSheet() {
   const wrapper = document.getElementById("container");
   wrapper.innerHTML = title.outerHTML + gallery.outerHTML;
   galleryButton("close"); // add close button
+  uploadButton(); // add upload button
 }
 
 function galleryButton(fn = "open", el = "") {
@@ -156,9 +175,31 @@ function galleryButton(fn = "open", el = "") {
   }
 }
 
+function uploadButton(fn = "show", el = "") {
+  if (fn === "show") {
+    const button = document.createElement("button");
+    Object.assign(button, {
+      className: "upload-button",
+      innerText: "Upload Image",
+      onclick: () => {
+        location.href = "/slideupload.php"; // redirect to the upload page
+      },
+    });
+    if (el !== "") {
+      // if an element is specified, insert the button before it
+      el = document.querySelector(el);
+      document.body.insertBefore(button, el || document.body.firstChild);
+    } else {
+      // append the button to the #container
+      document.getElementById("container").appendChild(button);
+    }
+  }
+}
+
 window.onload = function () {
   fetchImages();
   timer = setInterval(nextImage, 4000); // 5 seconds per slide
   fetchtimer = setInterval(fetchImages, 10000); // refresh image list every 10 seconds (down from original 60)
   galleryButton(); // create the gallery button
+  uploadButton(); // create the upload button
 };

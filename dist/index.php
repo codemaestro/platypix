@@ -15,7 +15,7 @@ include_once('../lib/auth.php');
 
 <body>
   <div id="container">
-    <div id="slide">
+    <div id="slide" class="initial">
       <div>
         <img id="slideshow-img" class="fade show" src="" />
       </div>
