@@ -71,6 +71,7 @@ button:focus {
   object-fit: contain;
   padding: 0;
   height: 85vh;
+  width: 100vw;
 }
 
 #slide img {
