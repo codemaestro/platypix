@@ -5,7 +5,7 @@ let timer = null;
 let fetchtimer = null;
 const siteurl =
   location.href.indexOf("127.") > -1
-    ? "replace-localhost-with-final-url"
+    ? 'https://pp.cmgo.ca'
     : location.href;
 
 const dir_slides = "images/";
